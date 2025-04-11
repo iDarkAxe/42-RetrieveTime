@@ -31,3 +31,13 @@ defSize() {
         exit 1
 	fi
 }
+
+printInfos() {
+    echo -e "Month\t:\t$MONTH"
+    echo -e "User\t:\t$USER"
+    echo -e "Size \t:\t$SIZE"
+}
+
+printMoreInfos() {
+    python3 ./env_utils.py 2
+}

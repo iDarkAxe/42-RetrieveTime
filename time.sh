@@ -15,8 +15,15 @@ DEFAULT_USER="ppontet"
 DEFAULT_SIZE="0"
 
 . ./fx.sh
+
+if [[ $1 == "24" ]]; then
+    rm -rf token.json
+    python3 ./retrieve_token.py
+    exit 1
+fi
 if [[ "$#" == "0" ]]; then
     echo -e $MESSAGE
+    exit 1
 elif [[ "$#" == "1" ]]; then
     defMonth $1
     USER="$DEFAULT_USER"
@@ -31,9 +38,17 @@ elif [[ "$#" == "3" ]]; then
     defSize $3
 fi
 
-# echo "$MONTH"
-# echo "$USER"
-# echo "$SIZE"
-python3 ./42_time.py $USER $SIZE $MONTH
+# printInfos
+# printMoreInfos
 
+if [[ "$#" == "1" || "$#" == "2" || "$#" == "3" ]]; then
+    python3 ./42_time.py $USER $SIZE $MONTH
+    if [[ "$?" != 0 ]]; then
+        python3 ./retrieve_token.py
+        python3 ./42_time.py $USER $SIZE $MONTH
+        if [[ "$?" != 0 ]]; then
+            echo -e "Stopping here as it crashed already one time"
+    fi
+    fi
+fi
 exit 0

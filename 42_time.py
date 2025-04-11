@@ -30,8 +30,8 @@ system(f"python3 {env_utils} 0")
 load_dotenv()
 token = getenv("auth_token", "")
 if token == "":
-    print("Error : Token still not recovered")
-    encrypt_before_close(1)
+    system(f"python3 {env_utils} 1")
+    raise SystemExit('Error : Token still not recovered')
 system(f"python3 {env_utils} 1")
 
 url = f"https://api.intra.42.fr/v2/users/{user_name}/locations"
@@ -105,7 +105,8 @@ while True:
 if response.status_code != 200:
     print("Erreur requete")
     print("Erreur:", response.json())
-    sys.exit(1)
+    raise SystemExit("Erreur:", response.json())
+    # sys.exit(1)
 
 total_time = timedelta()  # Stocke le temps total passé
 now = datetime.utcnow()

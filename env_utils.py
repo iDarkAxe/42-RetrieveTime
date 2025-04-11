@@ -88,6 +88,13 @@ if len(sys.argv) == 2:
         decrypt(f"{env_utils_path}.env", key)
     elif choice == 1:
         encrypt(f"{env_utils_path}.env", key)
+    if choice == 2:
+        decrypt(f"{env_utils_path}.env", key)
+        load_dotenv()
+        search_env("CLIENT_ID", 1)
+        search_env("CLIENT_SECRET", 1)
+        search_env("auth_token", 1)
+        encrypt(f"{env_utils_path}.env", key)
     sys.exit(0)
 
 # Searching to load all variables in .env

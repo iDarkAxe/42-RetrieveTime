@@ -15,16 +15,26 @@ else:
 	env_utils_path="./"
 env_utils=env_utils_path + "env_utils.py"
 
-system(f"python3 {env_utils} 0")
+if len(argv) >= 2:
+    try:
+        choice = int(argv[1])  # Convertir en entier
+    except ValueError:
+        exit(1)
+    if choice == 1:
+        system(f"{env_utils_path}time.sh 24")
+        exit(1)
 
+system(f"python3 {env_utils} 0")
+# exit(1)
 load_dotenv()
 CLIENT_ID = getenv("CLIENT_ID", "")
 CLIENT_SECRET = getenv("CLIENT_SECRET", "")
 if CLIENT_ID == "" or CLIENT_SECRET == "":
-    print("Error : Tokens not recovered")
+    print("Error : Tokens not recovered, generating new")
     system(f"python3 {env_utils} 1")
+    system(f"./time.sh 24")
     exit(1)
-system(f"python3 {env_utils} 1")
+# system(f"python3 {env_utils} 1")
 
 def get_auth_code():
     # URL d'autorisation
