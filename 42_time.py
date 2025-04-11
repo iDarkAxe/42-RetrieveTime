@@ -1,6 +1,20 @@
 import sys
 from datetime import datetime, timedelta
 import requests
+from os import getenv, path, system
+from sys import argv
+
+env_utils_path = path.dirname(argv[0])
+if env_utils_path != "":
+	env_utils_path += "/"
+else:
+	env_utils_path="./"
+
+env_utils=env_utils_path + "env_utils.py"
+
+def encrypt_before_close(error_level):
+    system(f"python3 {env_utils} 1")
+    sys.exit(error_level)
 
 # Vérifier si le premier argument (USER_NAME) est fourni
 if len(sys.argv) < 2:
@@ -10,7 +24,16 @@ if len(sys.argv) < 2:
 user_name = sys.argv[1]  # Nom d'utilisateur 42
 
 # Configuration
-token = "t"
+from dotenv import load_dotenv
+
+system(f"python3 {env_utils} 0")
+load_dotenv()
+token = getenv("auth_token", "")
+if token == "":
+    print("Error : Token still not recovered")
+    encrypt_before_close(1)
+system(f"python3 {env_utils} 1")
+
 url = f"https://api.intra.42.fr/v2/users/{user_name}/locations"
 headers = {"Authorization": f"Bearer {token}"}
 
@@ -34,8 +57,7 @@ if len(sys.argv) == 4:
         if target_month < 1 or target_month > 12:
             raise ValueError  # Lever une erreur si le mois est invalide
     except ValueError:
-        print(f"\ntarget_month {target_month:02d}")
-        print("Erreur: Le mois doit être un nombre entre 1 et 12.")
+        print(f"Erreur: Le mois {target_month:02d} doit être un nombre entre 1 et 12.")
         sys.exit(1)
     try:
         length = int(sys.argv[2])  # Convertir en entier
@@ -51,7 +73,6 @@ target_year = now.year
 # print(f"\ntarget_month {target_month:02d}, : length {length}")
 
 # Récupération des données
-
 
 page_number = 1
 locations = []
@@ -107,6 +128,6 @@ for loc in locations:
 # Affichage du temps total
 hours, remainder = divmod(total_time.total_seconds(), 3600)
 minutes, _ = divmod(remainder, 60)
-print(f"\nTemps total passé en {target_month:02d}/12 : {int(hours)}h {int(minutes)}min")
-
-
+if length == 1:
+    print("")
+print(f"Temps total passé en {target_month:02d}/12 : {int(hours)}h {int(minutes)}min")
