@@ -14,11 +14,13 @@ MESSAGE="$ALT\n$OPT"
 DEFAULT_USER="ppontet"
 DEFAULT_SIZE="0"
 
-. ./fx.sh
+DIRNAME="$(dirname $0)/"
+
+source "$DIRNAME/fx.sh"
 
 if [[ $1 == "24" ]]; then
-    rm -rf token.json
-    python3 ./retrieve_token.py
+    rm -rf "$DIRNAME/token.json"
+    python3 "$DIRNAME/retrieve_token.py"
     exit 1
 fi
 if [[ "$#" == "0" ]]; then
@@ -42,10 +44,10 @@ fi
 # printMoreInfos
 
 if [[ "$#" == "1" || "$#" == "2" || "$#" == "3" ]]; then
-    python3 ./42_time.py $USER $SIZE $MONTH
+    python3 "$DIRNAME/42_time.py" $USER $SIZE $MONTH
     if [[ "$?" != 0 ]]; then
-        python3 ./retrieve_token.py
-        python3 ./42_time.py $USER $SIZE $MONTH
+        python3 "$DIRNAME/retrieve_token.py"
+        python3 "$DIRNAME/42_time.py" $USER $SIZE $MONTH
         if [[ "$?" != 0 ]]; then
             echo -e "Stopping here as it crashed already one time"
     fi

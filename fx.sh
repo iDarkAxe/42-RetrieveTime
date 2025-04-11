@@ -39,5 +39,5 @@ printInfos() {
 }
 
 printMoreInfos() {
-    python3 ./env_utils.py 2
+    python3 "$(dirname $0)/env_utils.py" 2
 }
