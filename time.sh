@@ -1,53 +1,39 @@
 #!/bin/bash
 
-MESSAGE="./time.sh [length] [month]\nOPTIONNAL :\n\t[length] is short or full, short by default\n\t[month] should be between 1 and 12, current by default"
+ALT_MESSAGE1="./time.sh <month>"
+ALT_MESSAGE2="./time.sh <month> <length>"
+ALT_MESSAGE3="./time.sh <username> <month> <length>"
+ALT="$ALT_MESSAGE1\n$ALT_MESSAGE2\n$ALT_MESSAGE3"
+OPTIONNAL="OPTIONNAL :"
+LENGTH_MESSAGE="\t[length] is short or full, short by default"
+MONTH_MESSAGE="\t[month] should be between 1 and 12, current by default"
+USERNAME_MESSAGE="\t[username] is your username given on your intra"
+OPT="$OPTIONNAL\n$LENGTH_MESSAGE\n$MONTH_MESSAGE\n$USERNAME_MESSAGE"
+MESSAGE="$ALT\n$OPT"
 
-# Vérifier si l'argument MONTH est passé (le premier argument)
-if [[ ! -z $1 ]] && [[ ! "$1" =~ ^[0-9]+$ ]]; then
-    echo "Erreur : Le mois doit être un nombre."
+DEFAULT_USER="ppontet"
+DEFAULT_SIZE="0"
+
+. ./fx.sh
+if [[ "$#" == "0" ]]; then
     echo -e $MESSAGE
-    exit 1
+elif [[ "$#" == "1" ]]; then
+    defMonth $1
+    USER="$DEFAULT_USER"
+    SIZE="$DEFAULT_SIZE"
+elif [[ "$#" == "2" ]]; then
+    defMonth $1
+    defSize $2
+    USER="$DEFAULT_USER"
+elif [[ "$#" == "3" ]]; then
+    defUsername $1
+    defMonth $2
+    defSize $3
 fi
 
-# Si un mois est spécifié, l'assigner à MONTH
-if [[ ! -z $1 ]]; then
-    MONTH=$1
-else
-    MONTH=""
-fi
+# echo "$MONTH"
+# echo "$USER"
+# echo "$SIZE"
+python3 ./42_time.py $USER $SIZE $MONTH
 
-# Vérifier si un LENGTH est spécifié, sinon par défaut "short"
-if [[ ! -z $2 ]]; then
-    if [[ $2 == "short" ]]; then
-        CHOICE="short"
-    elif [[ $2 == "full" ]]; then
-        CHOICE="full"
-    else
-        echo "Erreur : [length] doit être 'short' ou 'full'."
-        echo -e $MESSAGE
-        exit 1
-    fi
-else
-    CHOICE="short"
-fi
-
-# Vérification du mois, s'il est spécifié
-if [[ ! -z $MONTH ]]; then
-    # Vérifier si le mois est entre 1 et 12
-    if [[ "$MONTH" -lt 1 ]] || [[ "$MONTH" -gt 12 ]]; then
-        echo "Erreur : Le mois doit être un nombre entre 1 et 12."
-        echo -e $MESSAGE
-        exit 1
-    fi
-fi
-
-# Affichage de ce qui a été choisi
-# echo "Mois choisi : $MONTH, Taille choisie : $CHOICE"
-
-if [[ $CHOICE == "short" ]]; then
-    python3 ./42_time.py $USER 0 $MONTH
-elif [[ $CHOICE == "full" ]]; then
-    python3 ./42_time.py $USER 1 $MONTH
-else
-    echo "Error AT CHOICE ??"
-fi
+exit 0
