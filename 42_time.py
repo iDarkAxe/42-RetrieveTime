@@ -77,7 +77,7 @@ target_year = now.year
 page_number = 1
 locations = []
 
-range_val = f"2025-{target_month}-01,2025-{target_month+1}-01"
+range_val = f"2026-{target_month}-01,2026-{target_month+1}-01"
 
 # Fonction pour récupérer toutes les localisations
 while True:
